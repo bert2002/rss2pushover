@@ -10,7 +10,7 @@ Features
 * parsing rss feed and push new article
 * database for article managment
 
-Usage
+Usage Example
 -------
 
 $ rss2pushover-single.pl --url "http://www.exbir.de/index.php?format=feed&type=rss"
