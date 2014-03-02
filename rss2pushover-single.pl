@@ -48,7 +48,7 @@ my $PUSH_USER = "YOUR_USER_KEY"; # user key
 
 # logging
 mkdir "$LOGPATH/", 0777 unless -d "$LOGPATH";
-open (LOGPATH, ">>$LOGPATH/rss2pushover.log") or die "can not open logfile $LOGPATH/mtgoxtrader.log";
+open (LOGPATH, ">>$LOGPATH/rss2pushover.log") or die "can not open logfile $LOGPATH/rss2pushover.log";
 sub mylog {
   my ($message) = @_;
   my $date = localtime;
