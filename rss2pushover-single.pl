@@ -89,7 +89,7 @@ if ($result->is_success) {
 		$sth->execute($md5title);
 
 		my $ref = $sth->fetchrow_hashref();
-	  my $id = $ref->{'id'};
+		my $id = $ref->{'id'};
 
 		if (!$id) {
 			mylog("new item -> $title");
