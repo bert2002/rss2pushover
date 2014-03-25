@@ -96,6 +96,8 @@ if ($result->is_success) {
 
 			# remove html from description
 			$description =~ s/(<[^>]*>|;amp|\&amp|;quot|;lt|;gt|;apos|quot;)//g;
+      # title max 100 characters
+      $title = substr $title, 0, 99;
 
 			# send item to pushover
 			my $response = LWP::UserAgent->new()->post(
