@@ -14,6 +14,7 @@ Usage Example
 -------
 
 $ rss2pushover-single.pl --url "http://www.exbir.de/index.php?format=feed&type=rss"
+
 $ rss2pushover.pl
 
 Database Schema (single)
