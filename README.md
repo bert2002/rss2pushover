@@ -27,12 +27,13 @@ Database Schema (multi)
 -------
 
 CREATE TABLE channel (id INTEGER PRIMARY KEY AUTOINCREMENT, status INT, url TEXT, token TEXT, user TEXT);
+
 CREATE TABLE data (id INTEGER PRIMARY KEY AUTOINCREMENT, timestamp DATETIME DEFAULT CURRENT_TIMESTAMP, title TEXT, md5title TEXT, link TEXT, description TEXT, channel INT);
 
 Walkthrough
 -------
 
-To use the more advanced version with channel managment you need to create the multi database or just use rss2pushover.db
+To use the more advanced version with channel managment you need to create the multi database or just use rss2pushover.db.
 Adding a new channel is done by manipulating the databse. There is no interface available yet.
 
 sqlite> INSERT INTO channel (status, url, token, user) VALUES (1,$FEED_URL,$PUSH_TOKEN,$PUSH_USER);
@@ -44,7 +45,7 @@ sqlite> INSERT INTO channel (status, url, token, user) VALUES (1,$FEED_URL,$PUSH
 
 After adding a channel the script can run:
 
-# perl rss2pushover.pl
+$ perl rss2pushover.pl
 
 Please dont forget to set the correct path and log directory in the script.
 
