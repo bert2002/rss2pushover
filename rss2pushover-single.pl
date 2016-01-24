@@ -35,12 +35,12 @@ if ( ($help) || (!$url) ){
 
 # user configuration
 my $DEBUG = "0"; # enable for stdout logging
-my $LOGPATH = "/path/to/log"; # path to log directory
-my $SQLPATH = "/path/to/rss2pushover-single.db"; # Path to sqlite3 database
+my $LOGPATH = "/home/steffen/rss2pushover/log"; # path to log directory
+my $SQLPATH = "/home/steffen/rss2pushover/rss2pushover.db"; # Path to sqlite3 database
 
 # pushover.net configuration
-my $PUSH_TOKEN = "YOUR_TOKEN"; # secret api token
-my $PUSH_USER = "YOUR_USER_KEY"; # user key
+my $PUSH_TOKEN = "a133dPEQsHCzDrZ1YNUWVxaa4Lftke"; # secret api token
+my $PUSH_USER = "u6ro34gWoGo6geJdiYvSA7ftuzFAdb"; # user key
 
 #
 # Helper
@@ -48,7 +48,7 @@ my $PUSH_USER = "YOUR_USER_KEY"; # user key
 
 # logging
 mkdir "$LOGPATH/", 0777 unless -d "$LOGPATH";
-open (LOGPATH, ">>$LOGPATH/rss2pushover.log") or die "can not open logfile $LOGPATH/rss2pushover.log";
+open (LOGPATH, ">>$LOGPATH/rss2pushover.log") or die "can not open logfile $LOGPATH/mtgoxtrader.log";
 sub mylog {
   my ($message) = @_;
   my $date = localtime;
@@ -71,6 +71,7 @@ mylog("start $0 --url $url");
 
 # Request url
 my $ua = LWP::UserAgent->new;
+$ua->agent("Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36");
 my $req = HTTP::Request->new(GET => $url);
 my $result = $ua->request($req);
 
@@ -89,15 +90,15 @@ if ($result->is_success) {
 		$sth->execute($md5title);
 
 		my $ref = $sth->fetchrow_hashref();
-		my $id = $ref->{'id'};
+	  my $id = $ref->{'id'};
 
 		if (!$id) {
 			mylog("new item -> $title");
 
 			# remove html from description
-			$description =~ s/(<[^>]*>|;amp|\&amp|;quot|;lt|;gt|;apos|quot;)//g;
-      # title max 100 characters
-      $title = substr $title, 0, 99;
+			$description =~ s/(<[^>]*>|;amp|\&amp|;quot|;lt|;gt|;apos|quot;|\&nbsp;)//g;
+			# title max 100 characters
+			$title = substr $title, 0, 99;
 
 			# send item to pushover
 			my $response = LWP::UserAgent->new()->post(
@@ -109,6 +110,7 @@ if ($result->is_success) {
 				"url" => $link,
 				"url_title" => $title
 			]);
+			#print Dumper($response);
 
 			if ($response->is_success) {
 				# insert in database

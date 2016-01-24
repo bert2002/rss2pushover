@@ -15,6 +15,10 @@ use XML::Simple;
 use Digest::MD5 qw(md5_hex);
 use Encode qw(encode_utf8);
 use DBI;
+use FindBin qw($Bin);
+use lib "$Bin/lib/";
+use Mail;
+
 
 my $help;
 
@@ -32,9 +36,9 @@ if ($help) {
 }
 
 # user configuration
-my $DEBUG = "1"; # enable for stdout logging
-my $LOGPATH = $ENV{"HOME"} . "/log"; # path to log directory
-my $SQLPATH = $ENV{"HOME"} . "/rss2pushover.db"; # Path to sqlite3 database
+my $DEBUG = "0"; # enable for stdout logging
+my $LOGPATH = $ENV{"HOME"} . "/rss2pushover/log"; # path to log directory
+my $SQLPATH = $ENV{"HOME"} . "/rss2pushover/rss2pushover.db"; # Path to sqlite3 database
 
 #
 # Helper
@@ -75,6 +79,7 @@ while (my $ref = $sth->fetchrow_hashref()) {
 
 	# Request url
 	my $ua = LWP::UserAgent->new;
+	$ua->agent("Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36");
 	my $req = HTTP::Request->new(GET => $url);
 	my $result = $ua->request($req);
 
@@ -95,12 +100,18 @@ while (my $ref = $sth->fetchrow_hashref()) {
 		  my $id = $ref->{'id'};
 
 			if (!$id) {
-				mylog("new item -> $title");
+				mylog("new item in channel: $channelid -> $title");
+
+				if (!$description) {
+					$description = $title;
+				}
 
 				# remove html from description
 				$description =~ s/(<[^>]*>|;amp|\&amp|;quot|;lt|;gt|;apos|quot;|\&nbsp;)//g;
 				# title max 100 characters
 				$title = substr $title, 0, 99;
+				# message max 512 characters
+				$description = substr $description, 0, 512;
 
 				# send item to pushover
 				my $response = LWP::UserAgent->new()->post(
@@ -121,6 +132,7 @@ while (my $ref = $sth->fetchrow_hashref()) {
 
 				} else {
 					my $error = $response->code;
+					my ($status) = SendMail($error);
 					mylog("could not push message error: $error title: $title");
 				}
 
@@ -128,7 +140,7 @@ while (my $ref = $sth->fetchrow_hashref()) {
 		} 
 
 		# database maintenance
-		$dbh->do("DELETE FROM data WHERE timestamp <= date('now','-30 day');");
+		$dbh->do("DELETE FROM data WHERE timestamp <= date('now','-60 day');");
 
 	} else {
 		mylog("Could not receive $url");
@@ -138,5 +150,6 @@ while (my $ref = $sth->fetchrow_hashref()) {
 
 
 $dbh->disconnect; 
+
 
 
