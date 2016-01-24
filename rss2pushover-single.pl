@@ -39,8 +39,8 @@ my $LOGPATH = "/home/steffen/rss2pushover/log"; # path to log directory
 my $SQLPATH = "/home/steffen/rss2pushover/rss2pushover.db"; # Path to sqlite3 database
 
 # pushover.net configuration
-my $PUSH_TOKEN = "a133dPEQsHCzDrZ1YNUWVxaa4Lftke"; # secret api token
-my $PUSH_USER = "u6ro34gWoGo6geJdiYvSA7ftuzFAdb"; # user key
+my $PUSH_TOKEN = ""; # secret api token
+my $PUSH_USER = ""; # user key
 
 #
 # Helper
