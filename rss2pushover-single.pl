@@ -35,8 +35,8 @@ if ( ($help) || (!$url) ){
 
 # user configuration
 my $DEBUG = "0"; # enable for stdout logging
-my $LOGPATH = "/home/steffen/rss2pushover/log"; # path to log directory
-my $SQLPATH = "/home/steffen/rss2pushover/rss2pushover.db"; # Path to sqlite3 database
+my $LOGPATH = $ENV{"HOME"} . "/rss2pushover/log"; # path to log directory
+my $SQLPATH = $ENV{"HOME"} . "/rss2pushover/rss2pushover.db"; # Path to sqlite3 database
 
 # pushover.net configuration
 my $PUSH_TOKEN = ""; # secret api token
